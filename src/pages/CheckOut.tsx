@@ -1,8 +1,11 @@
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import type { RootState } from "../store/store"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import { clearCart } from "../store/slice/cartSlice"
+import { toast } from "react-hot-toast"
 
 function CheckOut() {
+  const dispatch = useDispatch()
   const items = useSelector((state: RootState) => state.cart.items)
 
   const total = items.reduce(
@@ -10,11 +13,20 @@ function CheckOut() {
     0
   )
 
+  const navigate = useNavigate()
+  const handlePlaceOrder = () => {
+    dispatch(clearCart())
+    toast.success("Order placed successfully")
+    navigate("/",{replace: true})
+  }
+
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-4">
-      <h1 className="text-xl font-semibold">Checkout</h1>
-      <Link to="/cart" className="text-blue-500">Back to Cart</Link>
+        <h1 className="text-xl font-semibold">Checkout</h1>
+        <Link to="/cart" className="text-blue-500">
+          Back to Cart
+        </Link>
       </div>
 
       {items.length === 0 ? (
@@ -32,7 +44,10 @@ function CheckOut() {
 
           <p className="mt-4 font-bold">Total: ₹{total}</p>
 
-          <button className="mt-4 bg-green-500 text-white px-4 py-2 rounded">
+          <button
+            className="mt-4 bg-green-500 text-white px-4 py-2 rounded"
+            onClick={handlePlaceOrder}
+          >
             Place Order
           </button>
         </div>
