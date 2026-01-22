@@ -3,21 +3,25 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage"; 
 import authReducer from "./slice/authSlice";
+import cartReducer from "./slice/cartSlice";
 
-const rootReducer = combineReducers({
-  auth: authReducer,
-});
+// const rootReducer = combineReducers({
+//   auth: authReducer,
+// });
 
-const persistConfig = {
-  key: "root",
-  storage,
-  whitelist: ["auth"],
-};
+// const persistConfig = {
+//   key: "root",
+//   storage,
+//   whitelist: ["auth"],
+// };
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+// const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
-  reducer: persistedReducer,
+  reducer: {
+    auth: authReducer,
+    cart: cartReducer,
+  },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false, 
