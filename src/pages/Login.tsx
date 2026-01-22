@@ -1,9 +1,10 @@
 import { useMutation } from "@tanstack/react-query"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { loginUser } from "../services/userSevices"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { setToken, setUser } from "../store/slice/authSlice"
 import { useNavigate } from "react-router-dom"
+import type { RootState } from "../store/store"
 
 function Login() {
   const [username, setUsername] = useState("")
@@ -11,6 +12,12 @@ function Login() {
 
    const dispatch = useDispatch()
    const navigate = useNavigate()
+   const token = useSelector((state: RootState) => state.auth.token)
+   useEffect(()=>{
+    if(token){
+      navigate("/",{replace: true})
+    }
+   },[token, navigate])
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: (Credential :{username: string,password: string})=>
          loginUser(Credential.username, Credential.password),
