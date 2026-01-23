@@ -1,20 +1,40 @@
 import axiosInstance from "../axois/axoisInstences"
 
-export async function getProducts({ page = 1, limit = 8 }: { page?: number; limit?: number }) {
-    try{
-            const skip = (page - 1) * limit
+export async function getProducts({ page = 1, limit = 8, category, search }: { page?: number; limit?: number; category?: string; search?: string }) {
+    try {
+        const skip = (page - 1) * limit
+        let url = "/products"
 
-        const result = await axiosInstance.get("/products", {
+        if (category) {
+            url = `/products/category/${category}`
+        } else if (search) {
+            url = `/products/search`
+        }
+
+        const result = await axiosInstance.get(url, {
             params: {
                 limit,
-                skip
+                skip,
+                q: search
             }
         })
         // console.log(result)
         return result
     }
-    catch(error){
+    catch (error) {
         console.log(error)
         throw error
     }
-}   
+}
+
+
+export async function getCategories() {
+    try {
+        const result = await axiosInstance.get("/products/categories")
+        return result.data
+    }
+    catch (error) {
+        console.log(error)
+        throw error
+    }
+}
