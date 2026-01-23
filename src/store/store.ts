@@ -1,7 +1,19 @@
-
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { persistReducer, persistStore } from "redux-persist";
-import storage from "redux-persist/lib/storage";
+// import storage from "redux-persist/lib/storage"; 
+
+const storage = {
+  getItem: async (key: string) => {
+    return localStorage.getItem(key);
+  },
+  setItem: async (key: string, value: string) => {
+    return localStorage.setItem(key, value);
+  },
+  removeItem: async (key: string) => {
+    return localStorage.removeItem(key);
+  },
+};
+
 import authReducer from "./slice/authSlice";
 import cartReducer from "./slice/cartSlice";
 
@@ -13,7 +25,7 @@ const rootReducer = combineReducers({
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["auth", "cart"], // Added cart to whitelist for better UX
+  whitelist: ["auth", "cart"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
